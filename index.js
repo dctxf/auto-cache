@@ -23,16 +23,17 @@
       this.cache = cache;
     } else {
       this.set([]);
+      this.cache = [];
     }
   };
   AutoCache.prototype.get = function(name) {
     return JSON.parse(this.ls.getItem(name || this.name));
   };
   AutoCache.prototype.set = function(name, item) {
-    if (arguments.length > 1) {
+    if (arguments.length === 2) {
       this.ls.setItem(name, JSON.stringify(item));
     } else {
-      this.ls.setItem(name, JSON.stringify(item));
+      this.ls.setItem(this.name, JSON.stringify(arguments[0]));
     }
   };
   AutoCache.prototype.put = function(name, item) {
