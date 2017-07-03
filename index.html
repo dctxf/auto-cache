@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>本地存储</title>
+</head>
+
+<body>
+  <h2>其他操作</h2>
+  <div>
+    <button type="button" id="clearCurrent">清除当前缓存</button>
+    <button type="button" id="clearAll">清除所有缓存</button>
+  </div>
+  <h2>本地存储</h2>
+  <label for="chat">
+    <input type="text" name="chat" id="chat">
+  </label>
+  <button type="button" id="btn">发送</button>
+  <h3>内容区域</h3>
+  <ul id="screen">
+  </ul>
+  <script src="index.js"></script>
+</body>
+<script>
+var autoCache = new AutoCache('history', 2);
+var btn = document.getElementById('btn'),
+  chat = document.getElementById('chat'),
+  screen = document.getElementById('screen'),
+  clearAll = document.getElementById('clearAll'),
+  clearCurrent = document.getElementById('clearCurrent');
+// 缓存读取
+function readCache() {
+  var cache = autoCache.get();
+  render(cache);
+};
+// render
+function render(data) {
+  var k, li;
+  if (typeof data === 'string') {
+    li = document.createElement('li');
+    li.innerHTML = data;
+    screen.appendChild(li);
+    chat.value = '';
+  } else {
+    li = '';
+    for (k in data) {
+      li += '<li>' + data[k] + '</li>';
+    }
+    screen.innerHTML = li;
+  }
+
+};
+window.onload = function() {
+  readCache();
+  // 发送信息
+  btn.addEventListener('click', function() {
+    var content = +new Date() + '_' + chat.value;
+    if (chat.value) {
+      render(content);
+      autoCache.put(content);
+    }
+  });
+  // 清除当前存储
+  clearCurrent.addEventListener('click', function() {
+    autoCache.remove();
+    screen.innerHTML = '';
+  });
+  // 清除所有本地存储
+  clearAll.addEventListener('click', function() {
+    autoCache.clear();
+    screen.innerHTML = '';
+  });
+};
+</script>
+
+</html>
