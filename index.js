@@ -27,7 +27,12 @@
     }
   };
   AutoCache.prototype.get = function(name) {
-    return JSON.parse(this.ls.getItem(name || this.name));
+    var item = this.ls.getItem(name || this.name);
+    if (item) {
+      return JSON.parse(item);
+    } else {
+      return item;
+    }
   };
   AutoCache.prototype.set = function(name, item) {
     if (arguments.length === 2) {
